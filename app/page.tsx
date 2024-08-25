@@ -1,5 +1,5 @@
 import { Monochord } from "./components/Monochord";
-import { megrim } from "./layout";
+import { megrim } from "./font";
 
 export default function Home() {
   const className = megrim.className + " text-4xl";
