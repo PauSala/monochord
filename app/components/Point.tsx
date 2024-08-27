@@ -1,4 +1,5 @@
 "use client";
+import { v4 } from "uuid";
 export const Point = ({
   point,
   onClick,
@@ -59,7 +60,7 @@ export class PartitionPoint {
     this.r = 5;
     this.label = label;
     this.position = position;
-    this.id = label.toLowerCase();
+    this.id = v4();
   }
 
   public fractionToString() {

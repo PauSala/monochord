@@ -2,7 +2,7 @@
 
 import { Fraction, PartitionPoint, Point } from "./Point";
 import { AddPointDialog } from "./AddPointDialog";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { getSynth, pointPosition } from "./Utils";
 import CustomPopover from "./CirclePopover";
 import { Play } from "lucide-react";
@@ -17,7 +17,6 @@ import {
 import * as Tone from "tone";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { on } from "events";
 
 const w = 1000;
 const h = 100;
@@ -33,6 +32,7 @@ export const startPoint = new PartitionPoint({
     denominator: 1,
   },
 });
+startPoint.id = "start";
 
 export const endPoint = new PartitionPoint({
   x: w - m,
@@ -43,6 +43,7 @@ export const endPoint = new PartitionPoint({
     denominator: 1,
   },
 });
+endPoint.id = "end";
 
 export const Monochord = () => {
   const popoverRef = useRef<HTMLDivElement>(null);
