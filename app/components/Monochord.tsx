@@ -92,6 +92,9 @@ export const Monochord = () => {
       setPopoverOpen(false);
       return;
     }
+    if (selectedPoint?.id === bridgeId) {
+      setBridgeId(endPoint.id);
+    }
     setPoints(points.filter((point) => selectedPoint?.id !== point.id));
     setPopoverOpen(false);
   };
