@@ -2,7 +2,7 @@
 
 import { Fraction, PartitionPoint, Point } from "./Point";
 import { AddPointDialog } from "./AddPointDialog";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getSynth, pointPosition } from "./Utils";
 import CustomPopover from "./CirclePopover";
 import { Play } from "lucide-react";
@@ -59,8 +59,11 @@ export const Monochord = () => {
     x: number;
     y: number;
   }>({ x: 0, y: 0 });
+  const [bridgeId, setBridgeId] = useState(endPoint.id);
 
-  const [selectedPoint, setSelectedPoint] = useState<PartitionPoint | null>();
+  const [selectedPoint, setSelectedPoint] = useState<PartitionPoint | null>(
+    null
+  );
 
   const handleCircleClick = (
     event: React.MouseEvent<SVGCircleElement, MouseEvent>,
@@ -117,14 +120,25 @@ export const Monochord = () => {
     setPoints([...points, point]);
   };
 
+  useEffect(() => {
+    const point = points.find(
+      (point) => point.id === bridgeId
+    ) as PartitionPoint;
+    const position = point.position;
+    const freq = baseFreq / (position.numerator / position.denominator);
+    setLFreq(freq);
+    const rFreq =
+      baseFreq /
+      ((position.denominator - position.numerator) / position.denominator);
+    setRFreq(rFreq === Infinity ? baseFreq : rFreq);
+  }, [baseFreq, points, bridgeId]);
+
   const onLPlay = async () => {
-    await Tone.start();
     const synth = getSynth();
     synth?.triggerAttackRelease(lFreq, 1.5);
   };
 
   const onRPlay = async () => {
-    await Tone.start();
     const synth = getSynth();
     synth?.triggerAttackRelease(rFreq, 1.5);
   };
@@ -134,6 +148,7 @@ export const Monochord = () => {
     const point = points.find(
       (point) => point.id === pointId
     ) as PartitionPoint;
+    setBridgeId(pointId);
     point.select();
     setPoints([...points]);
     const position = point.position;
@@ -146,9 +161,7 @@ export const Monochord = () => {
   };
 
   const onFreqChange = (value: string) => {
-    setSelectedPoint(endPoint);
     setBaseFreq(parseInt(value));
-    onSetBridge(endPoint.id);
   };
 
   return (
